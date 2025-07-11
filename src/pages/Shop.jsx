@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { apiClient } from '../lib/api';
 import ProductCard from '../components/ProductCard';
 import { Filter, SortAsc, Search } from 'lucide-react';
 
@@ -19,33 +19,12 @@ const Shop = () => {
   const fetchData = async () => {
     try {
       // Fetch products
-      const { data: productsData, error: productsError } = await supabase
-        .from('products')
-        .select(`
-          *,
-          categories (name),
-          brands (name)
-        `)
-        .eq('is_active', true);
-
-      if (productsError) throw productsError;
-
-      const formattedProducts = productsData.map(product => ({
-        ...product,
-        brand_name: product.brands.name,
-        category_name: product.categories.name
-      }));
-
-      setProducts(formattedProducts);
+      const products = await apiClient.getProducts();
+      setProducts(products);
 
       // Fetch categories
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from('categories')
-        .select('name')
-        .order('name');
-
-      if (categoriesError) throw categoriesError;
-      setCategories(categoriesData);
+      const categories = await apiClient.getCategories();
+      setCategories(categories);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard from '../components/ProductCard';
-import { supabase } from '../lib/supabase';
+import { apiClient } from '../lib/api';
 import { Heart, Shield, Truck, Award } from 'lucide-react';
 
 const Home = () => {
@@ -14,25 +14,8 @@ const Home = () => {
 
   const fetchFeaturedProducts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          *,
-          categories (name),
-          brands (name)
-        `)
-        .eq('is_active', true)
-        .limit(8);
-
-      if (error) throw error;
-
-      const formattedProducts = data.map(product => ({
-        ...product,
-        brand_name: product.brands.name,
-        category_name: product.categories.name
-      }));
-
-      setFeaturedProducts(formattedProducts);
+      const products = await apiClient.getProducts();
+      setFeaturedProducts(products.slice(0, 8));
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {

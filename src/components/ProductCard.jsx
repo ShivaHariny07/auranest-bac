@@ -11,7 +11,7 @@ const ProductCard = ({ product }) => {
       name: product.name,
       price: parseFloat(product.price),
       image: product.image_url,
-      brand: product.brand_name || product.brands?.name || 'Unknown Brand'
+      brand: product.brand_name || 'Unknown Brand'
     });
   };
 
@@ -23,7 +23,7 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
       <div className="relative overflow-hidden">
         <img
-          src={product.image_url}
+          src={product.image_url || product.image}
           alt={product.name}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -37,7 +37,7 @@ const ProductCard = ({ product }) => {
       <div className="p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-red-800">
-            {product.brand_name || product.brands?.name || 'Unknown Brand'}
+            {product.brand_name || product.brand || 'Unknown Brand'}
           </span>
           <div className="flex items-center">
             <Star className="h-4 w-4 text-yellow-400 fill-current" />

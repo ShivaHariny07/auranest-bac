@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { apiClient } from '../lib/api';
 import { useAuth } from './AuthContext';
 
 const CartContext = createContext({});
@@ -42,33 +42,8 @@ export const CartProvider = ({ children }) => {
 
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('cart_items')
-        .select(`
-          *,
-          products (
-            id,
-            name,
-            price,
-            image_url,
-            brands (name)
-          )
-        `)
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-
-      const formattedItems = data.map(item => ({
-        id: item.products.id,
-        name: item.products.name,
-        price: parseFloat(item.products.price),
-        image: item.products.image_url,
-        brand: item.products.brands.name,
-        quantity: item.quantity,
-        cartItemId: item.id
-      }));
-
-      setCartItems(formattedItems);
+      const cartItems = await apiClient.getCart();
+      setCartItems(cartItems);
     } catch (error) {
       console.error('Error loading cart:', error);
     } finally {
@@ -83,26 +58,9 @@ export const CartProvider = ({ children }) => {
       if (user) {
         // Add to database for authenticated users
         if (existingItem) {
-          // Update quantity in database
-          const { error } = await supabase
-            .from('cart_items')
-            .update({ quantity: existingItem.quantity + 1 })
-            .eq('id', existingItem.cartItemId);
-
-          if (error) throw error;
+          await apiClient.updateCartItem(existingItem.cartItemId, existingItem.quantity + 1);
         } else {
-          // Insert new item in database
-          const { error } = await supabase
-            .from('cart_items')
-            .insert([
-              {
-                user_id: user.id,
-                product_id: product.id,
-                quantity: 1
-              }
-            ]);
-
-          if (error) throw error;
+          await apiClient.addToCart(product.id, 1);
         }
         
         // Reload cart from database
@@ -134,12 +92,7 @@ export const CartProvider = ({ children }) => {
       if (user) {
         const item = cartItems.find(item => item.id === productId);
         if (item && item.cartItemId) {
-          const { error } = await supabase
-            .from('cart_items')
-            .delete()
-            .eq('id', item.cartItemId);
-
-          if (error) throw error;
+          await apiClient.removeFromCart(item.cartItemId);
         }
         
         await loadCartFromDatabase();
@@ -161,12 +114,7 @@ export const CartProvider = ({ children }) => {
       if (user) {
         const item = cartItems.find(item => item.id === productId);
         if (item && item.cartItemId) {
-          const { error } = await supabase
-            .from('cart_items')
-            .update({ quantity })
-            .eq('id', item.cartItemId);
-
-          if (error) throw error;
+          await apiClient.updateCartItem(item.cartItemId, quantity);
         }
         
         await loadCartFromDatabase();
@@ -193,12 +141,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     try {
       if (user) {
-        const { error } = await supabase
-          .from('cart_items')
-          .delete()
-          .eq('user_id', user.id);
-
-        if (error) throw error;
+        await apiClient.clearCart();
       }
       
       setCartItems([]);

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { apiClient } from '../lib/api';
 
 const AuthContext = createContext({});
 
@@ -19,9 +19,13 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in
     const checkUser = async () => {
       try {
-        const savedUser = localStorage.getItem('aura_nest_user');
-        if (savedUser) {
-          setUser(JSON.parse(savedUser));
+        const token = localStorage.getItem('aura_nest_token');
+        if (token) {
+          // Token exists, user is logged in
+          const savedUser = localStorage.getItem('aura_nest_user');
+          if (savedUser) {
+            setUser(JSON.parse(savedUser));
+          }
         }
       } catch (error) {
         console.error('Error checking user:', error);
@@ -37,26 +41,8 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       
-      // Check if user exists in our database
-      const { data: userData, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', email)
-        .single();
-
-      if (error) {
-        throw new Error('Invalid email or password');
-      }
-
-      // For demo purposes, we'll accept any password
-      // In production, you'd verify the password hash
-      const userInfo = {
-        id: userData.id,
-        email: userData.email,
-        name: userData.full_name,
-        phone: userData.phone,
-        address: userData.address
-      };
+      const data = await apiClient.login(email, password);
+      const userInfo = data.user;
 
       setUser(userInfo);
       localStorage.setItem('aura_nest_user', JSON.stringify(userInfo));
@@ -73,30 +59,8 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       
-      // Insert new user into database
-      const { data, error } = await supabase
-        .from('users')
-        .insert([
-          {
-            email: email,
-            password_hash: password, // In production, hash this password
-            full_name: name
-          }
-        ])
-        .select()
-        .single();
-
-      if (error) {
-        throw new Error('Registration failed. Email might already exist.');
-      }
-
-      const userInfo = {
-        id: data.id,
-        email: data.email,
-        name: data.full_name,
-        phone: data.phone,
-        address: data.address
-      };
+      const data = await apiClient.register(name, email, password);
+      const userInfo = data.user;
 
       setUser(userInfo);
       localStorage.setItem('aura_nest_user', JSON.stringify(userInfo));
@@ -110,6 +74,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    apiClient.logout();
     setUser(null);
     localStorage.removeItem('aura_nest_user');
   };
