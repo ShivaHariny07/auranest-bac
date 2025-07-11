@@ -17,7 +17,7 @@ const Login = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -30,13 +30,13 @@ const Login = () => {
       }
       navigate('/');
     } catch (err) {
-      setError('Authentication failed. Please try again.');
+      setError(err.message || 'Authentication failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value

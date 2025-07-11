@@ -1,22 +1,66 @@
-import React, { useState } from 'react';
-import { products } from '../data/products';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import { Filter, SortAsc, Search } from 'lucide-react';
 
 const Shop = () => {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [filterBy, setFilterBy] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      // Fetch products
+      const { data: productsData, error: productsError } = await supabase
+        .from('products')
+        .select(`
+          *,
+          categories (name),
+          brands (name)
+        `)
+        .eq('is_active', true);
+
+      if (productsError) throw productsError;
+
+      const formattedProducts = productsData.map(product => ({
+        ...product,
+        brand_name: product.brands.name,
+        category_name: product.categories.name
+      }));
+
+      setProducts(formattedProducts);
+
+      // Fetch categories
+      const { data: categoriesData, error: categoriesError } = await supabase
+        .from('categories')
+        .select('name')
+        .order('name');
+
+      if (categoriesError) throw categoriesError;
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.brand.toLowerCase().includes(searchTerm.toLowerCase());
+                         product.brand_name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesBrand = filterBy === 'all' || 
-                        (filterBy === 'dr-sheths' && product.brand === "Dr. Sheth's") ||
-                        (filterBy === 'aqualogica' && product.brand === 'Aqualogica') ||
-                        (filterBy === 'on-sale' && product.originalPrice && product.originalPrice > product.price);
-    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+                        (filterBy === 'dr-sheths' && product.brand_name === "Dr. Sheths") ||
+                        (filterBy === 'aqualogica' && product.brand_name === 'Aqualogica') ||
+                        (filterBy === 'on-sale' && product.original_price && product.original_price > product.price);
+    const matchesCategory = categoryFilter === 'all' || product.category_name === categoryFilter;
     
     return matchesSearch && matchesBrand && matchesCategory;
   });
@@ -24,18 +68,29 @@ const Shop = () => {
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case 'price-low':
-        return a.price - b.price;
+        return parseFloat(a.price) - parseFloat(b.price);
       case 'price-high':
-        return b.price - a.price;
+        return parseFloat(b.price) - parseFloat(a.price);
       case 'rating':
-        return b.rating - a.rating;
+        return (b.rating || 0) - (a.rating || 0);
       case 'name':
       default:
         return a.name.localeCompare(b.name);
     }
   });
 
-  const categories = [...new Set(products.map(p => p.category))];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-800 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading products...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -72,7 +127,7 @@ const Shop = () => {
               >
                 <option value="all">All Categories</option>
                 {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
+                  <option key={category.name} value={category.name}>{category.name}</option>
                 ))}
               </select>
             </div>
@@ -86,7 +141,7 @@ const Shop = () => {
                 className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800"
               >
                 <option value="all">All Brands</option>
-                <option value="dr-sheths">Dr. Sheth's</option>
+                <option value="dr-sheths">Dr. Sheths</option>
                 <option value="aqualogica">Aqualogica</option>
                 <option value="on-sale">On Sale</option>
               </select>

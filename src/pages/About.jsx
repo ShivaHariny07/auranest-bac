@@ -19,7 +19,7 @@ const About = () => {
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Story</h2>
               <p className="text-gray-600 mb-4">
-                Founded with a passion for authentic beauty, Aura Nest started as a small dream to make premium skincare and makeup accessible to everyone. We carefully curate products from trusted brands like Dr. Sheth's and Aqualogica, ensuring that every item meets our high standards for quality and effectiveness.
+                Founded with a passion for authentic beauty, Aura Nest started as a small dream to make premium skincare and makeup accessible to everyone. We carefully curate products from trusted brands like Dr. Sheths and Aqualogica, ensuring that every item meets our high standards for quality and effectiveness.
               </p>
               <p className="text-gray-600">
                 Today, we're proud to serve thousands of customers who trust us with their beauty journey. From everyday essentials to special occasion glamour, we're here to help you discover products that make you feel radiant and confident.

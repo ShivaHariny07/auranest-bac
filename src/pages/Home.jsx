@@ -1,11 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard from '../components/ProductCard';
-import { products } from '../data/products';
+import { supabase } from '../lib/supabase';
 import { Heart, Shield, Truck, Award } from 'lucide-react';
 
 const Home = () => {
-  const featuredProducts = products.slice(0, 8);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, []);
+
+  const fetchFeaturedProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          categories (name),
+          brands (name)
+        `)
+        .eq('is_active', true)
+        .limit(8);
+
+      if (error) throw error;
+
+      const formattedProducts = data.map(product => ({
+        ...product,
+        brand_name: product.brands.name,
+        category_name: product.categories.name
+      }));
+
+      setFeaturedProducts(formattedProducts);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -56,11 +89,18 @@ const Home = () => {
             <p className="text-lg text-gray-600">Discover our best-selling beauty essentials</p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-800 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading products...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

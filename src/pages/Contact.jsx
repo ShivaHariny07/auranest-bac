@@ -9,7 +9,7 @@ const Contact = () => {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission here
     console.log('Form submitted:', formData);
@@ -17,7 +17,7 @@ const Contact = () => {
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
