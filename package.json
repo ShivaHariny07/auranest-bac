@@ -9,7 +9,7 @@
     "build": "vite build",
     "build:prod": "vite build --mode production",
     "preview": "vite preview",
-    "server": "node server/index.js",
+    "server": "node server/index.cjs",
     "start": "npm run server"
   },
   "dependencies": {
