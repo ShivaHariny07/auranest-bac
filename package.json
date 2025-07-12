@@ -19,7 +19,8 @@
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.344.0",
+    "lowdb": "^7.0.1",
+    "uuid": "^9.0.1"
     "mongodb": "^6.17.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
