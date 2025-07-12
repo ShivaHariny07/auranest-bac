@@ -1,5 +1,5 @@
 import React from 'react';
-import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -42,6 +42,15 @@ const Cart = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
         
+          <div className="flex items-center justify-center mb-4">
+            <div className="relative">
+              <Sparkles className="h-8 w-8 text-red-800 fill-current" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-pink-400 to-red-500 rounded-full animate-pulse"></div>
+            </div>
+            <span className="text-xl font-bold ml-2 bg-gradient-to-r from-red-800 to-pink-600 bg-clip-text text-transparent">
+              Aura Nest
+            </span>
+          </div>
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {cartItems.map((item) => (
             <div key={item.id} className="border-b border-gray-200 p-6">

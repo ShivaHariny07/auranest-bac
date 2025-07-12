@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard from '../components/ProductCard';
 import { apiClient } from '../lib/api';
-import { Heart, Shield, Truck, Award } from 'lucide-react';
+import { Heart, Shield, Truck, Award, Sparkles } from 'lucide-react';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -90,6 +90,13 @@ const Home = () => {
       {/* Newsletter Section */}
       <section className="py-16 bg-red-800 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative">
+              <Sparkles className="h-12 w-12 text-white fill-current" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-pink-400 to-yellow-400 rounded-full animate-pulse"></div>
+            </div>
+            <span className="text-3xl font-bold ml-3">Aura Nest</span>
+          </div>
           <h2 className="text-3xl font-bold mb-4">Stay Beautiful</h2>
           <p className="text-lg mb-8 opacity-90">
             Subscribe to our newsletter for beauty tips, exclusive offers, and new product launches

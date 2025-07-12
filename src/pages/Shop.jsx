@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../lib/api';
 import ProductCard from '../components/ProductCard';
-import { Filter, SortAsc, Search } from 'lucide-react';
+import { Filter, SortAsc, Search, Sparkles } from 'lucide-react';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -75,6 +75,15 @@ const Shop = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative">
+              <Sparkles className="h-12 w-12 text-red-800 fill-current" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-pink-400 to-red-500 rounded-full animate-pulse"></div>
+            </div>
+            <span className="text-3xl font-bold ml-3 bg-gradient-to-r from-red-800 to-pink-600 bg-clip-text text-transparent">
+              Aura Nest
+            </span>
+          </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Shop All Products</h1>
           <p className="text-lg text-gray-600">
             {sortedProducts.length} of {products.length} products

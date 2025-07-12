@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, User, Menu, X, Heart } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -21,8 +21,15 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-red-800 fill-current" />
-            <span className="text-2xl font-bold text-red-800">Aura Nest</span>
+            <div className="flex items-center space-x-2">
+              <div className="relative">
+                <Sparkles className="h-8 w-8 text-red-800 fill-current" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-pink-400 to-red-500 rounded-full animate-pulse"></div>
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-red-800 to-pink-600 bg-clip-text text-transparent">
+                Aura Nest
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

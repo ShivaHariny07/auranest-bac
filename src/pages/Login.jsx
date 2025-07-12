@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, Sparkles } from 'lucide-react';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -48,7 +48,15 @@ const Login = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="flex justify-center">
-            <User className="h-12 w-12 text-red-800" />
+            <div className="relative">
+              <Sparkles className="h-12 w-12 text-red-800 fill-current" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-pink-400 to-red-500 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          <div className="text-center mt-4 mb-6">
+            <span className="text-2xl font-bold bg-gradient-to-r from-red-800 to-pink-600 bg-clip-text text-transparent">
+              Aura Nest
+            </span>
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             {isLogin ? 'Sign in to your account' : 'Create your account'}

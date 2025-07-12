@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Shield, Award, Users } from 'lucide-react';
+import { Heart, Shield, Award, Users, Sparkles } from 'lucide-react';
 
 const About = () => {
   return (
@@ -7,6 +7,15 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <div className="text-center mb-16">
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative">
+              <Sparkles className="h-16 w-16 text-red-800 fill-current" />
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-500 rounded-full animate-pulse"></div>
+            </div>
+            <span className="text-4xl font-bold ml-4 bg-gradient-to-r from-red-800 to-pink-600 bg-clip-text text-transparent">
+              Aura Nest
+            </span>
+          </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">About Aura Nest</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Your trusted destination for premium beauty and skincare products. We believe that everyone deserves to feel confident and beautiful in their own skin.

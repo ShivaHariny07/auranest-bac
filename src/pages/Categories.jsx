@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Sparkles } from 'lucide-react';
 import { apiClient } from '../lib/api';
 
 const Categories = () => {
@@ -38,6 +39,15 @@ const Categories = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative">
+              <Sparkles className="h-12 w-12 text-red-800 fill-current" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-pink-400 to-red-500 rounded-full animate-pulse"></div>
+            </div>
+            <span className="text-3xl font-bold ml-3 bg-gradient-to-r from-red-800 to-pink-600 bg-clip-text text-transparent">
+              Aura Nest
+            </span>
+          </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Beauty Categories</h1>
           <p className="text-lg text-gray-600">Explore our complete range of beauty and skincare products</p>
         </div>
